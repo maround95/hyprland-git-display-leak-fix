@@ -2,8 +2,8 @@
 # Maintainer: éclairevoyant
 # Contributor: ThatOneCalculator <kainoa at t1c dot dev>
 
-pkgname=hyprland-git
-pkgver=0.35.0.r104.bc3f5b94
+pkgname=hyprland-git-display-leak-fix
+pkgver=0.36.0.r93.335506d5
 pkgrel=1
 pkgdesc="A dynamic tiling Wayland compositor based on wlroots that doesn't sacrifice on its looks."
 arch=(x86_64 aarch64)
@@ -16,6 +16,7 @@ depends=(
   glibc
   glslang
   hyprlang
+  hyprcursor
   libdisplay-info
   libdrm
   libglvnd
@@ -57,7 +58,7 @@ makedepends=(
   xorgproto
 )
 provides=("hyprland=${pkgver%%.r*}")
-conflicts=(hyprland)
+conflicts=(hyprland hyprland-git)
 source=(
   "git+https://github.com/hyprwm/Hyprland.git"
   "git+https://gitlab.freedesktop.org/wlroots/wlroots.git"
@@ -92,6 +93,7 @@ prepare() {
   # Pick pull requests from github using `pick_mr <pull request number>`.
 
   git -C subprojects/wlroots reset --hard
+  git -C subprojects/wlroots revert --no-commit ce615a44
   sed -E -i -e "s/(soversion = .*$)/soversion = 13032/g" subprojects/wlroots/meson.build
 }
 
